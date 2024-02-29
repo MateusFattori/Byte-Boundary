@@ -16,7 +16,7 @@ Retorna os detalhes de uma documeto com o filtro `maritimo` informado.
 
 `GET` /documentos{aerio}
 
-Retorna os detalhes de uma documeto com o filtro `maritimo` informado.
+Retorna os detalhes de uma documeto com o filtro `aerio` informado.
 
 **códigos de status**
 
