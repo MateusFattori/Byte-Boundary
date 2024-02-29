@@ -24,8 +24,3 @@ Retorna os detalhes de uma documeto com o filtro `aerio` informado.
 `404` filtro não encontrado
 
 ---
-
-
-# FAZ O L
-
-
