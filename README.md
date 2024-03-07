@@ -36,13 +36,6 @@ Retorna os detalhes de uma documento com o `id` informado.
 
 ---
 
-Dupla
-
-Mateus Fattori RM: 97904
-Pedro Baraldi RM: 98060
- 
- ---
-
  **Schema**
 
 ```js
@@ -54,3 +47,11 @@ Pedro Baraldi RM: 98060
 }
 
 ```
+---
+
+Dupla
+
+Mateus Fattori RM: 97904
+Pedro Baraldi RM: 98060
+ 
+ ---
