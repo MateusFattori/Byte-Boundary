@@ -24,3 +24,33 @@ Retorna os detalhes de uma documeto com o filtro `aerio` informado.
 `404` filtro não encontrado
 
 ---
+
+`GET` /categoria/{id}
+
+Retorna os detalhes de uma documento com o `id` informado.
+
+**códigos de status**
+
+`200` sucesso
+`404` id não encontrado
+
+---
+
+Dupla
+
+Mateus Fattori RM: 97904
+Pedro Baraldi RM: 98060
+ 
+ ---
+
+ **Schema**
+
+```js
+{
+    "id": 1,
+    "documento": "Exportação",
+    "aerio": "",
+    "maritimo" : ""
+}
+
+```
