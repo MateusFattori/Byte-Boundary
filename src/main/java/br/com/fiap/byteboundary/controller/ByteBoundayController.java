@@ -1,5 +1,8 @@
 package br.com.fiap.byteboundary.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +17,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.byteboundary.model.Documentos;
 import br.com.fiap.byteboundary.repository.DocumentosRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 @RestController
 @RequestMapping("/documentos")
+@Slf4j
 
 public class ByteBoundayController {
-
-    Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     DocumentosRepository documentosRepository;
@@ -36,35 +42,34 @@ public class ByteBoundayController {
         return documentosRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Documentos> get(@PathVariable Long id){
+    @GetMapping("{id}")
+    public ResponseEntity<Documentos> get(@PathVariable Long id) {
         log.info("Buscar por id: {}", id);
-        
-        return documentosRepository..findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return documentosRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public Documentos create(@RequestBody Documentos documentos) {
+        log.info("Cadastrando documentos: {}", documentos);
+        return documentosRepository.save(documentos);
     }
     
-
+    
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> destroy(@PathVariable Long id) {
-        log.info("apagando categoria {}", id);
-
-        verificarSeExisteCategoria(id);
-
-        documentosRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-
+    @ResponseStatus(NO_CONTENT)
+    public void destroy(@PathVariable Long id) {
+        log.info("Apagando documento {}", id);
     }
 
-
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody Documentos docuemtento){
-        log.info("atualizando documento id {} para {}", id, docuemtento);
-        
-        verificarSeExisteCategoria(id);
+    public Documentos update(@PathVariable Long id, @RequestBody Documentos documentos){
+        log.info("atualizado documento id{} para {},", id, documentos);
 
-        documentosRepository.setId(id);
-        documentosRepository.save(docuemtento);
-        return ResponseEntity.ok(docuemtento);
+        verificarSeDocumento(id);
+
+        documentos.setId(id);
+        return documentosRepository.save(documentos);
     }
 
     @GetMapping("/{maritimo}/{/aerio}")
@@ -78,7 +83,7 @@ public class ByteBoundayController {
         return ResponseEntity.ok(optionalDocumento.get());
     }
 
-    private void verificarSeExisteCategoria(Long id) {
+    private void verificarSeDocumento(Long id) {
         documentosRepository.findById(id)
         .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada" )
