@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,22 +73,20 @@ public class ByteBoundayController {
         return documentosRepository.save(documentos);
     }
 
-    @GetMapping("/{maritimo}/{/aerio}")
-    public ResponseEntity<Documentos> get(@PathVariable String maritimo, @PathVariable String aerio){
-        log.info("Buscar por maritimo e aerio", maritimo, aerio);
-        var optionalDocumento = repository.stream().filter(c -> c.maritimo().equals(maritimo) && c.aerio().equals(aerio)).findFirst();
-        
-        if (optionalDocumento.isEmpty())
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(optionalDocumento.get());
-    }
-
     private void verificarSeDocumento(Long id) {
         documentosRepository.findById(id)
         .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada" )
             );
+    }
+
+    @GetMapping("/{maritimo}/{aerio}")
+    public ResponseEntity<Documentos> getDocumentosByMaritimoAndAerio(@PathVariable String maritimo, @PathVariable String aerio) {
+    log.info("Buscar por maritimo e aerio: {}, {}", maritimo, aerio);
+    Optional<Documentos> optionalDocumento = documentosRepository.findByMaritimoAndAerio(maritimo, aerio);
+    
+    return optionalDocumento.map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
     
